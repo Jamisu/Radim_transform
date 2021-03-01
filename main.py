@@ -20,7 +20,7 @@
 import os
 import numpy as np
 import sys
-from PIL import Image
+from PIL import Image, ImageFilter
 import PIL
 import random
 
@@ -260,14 +260,19 @@ if __name__ == "__main__":
                     print("chosen", choose)
                     im = Image.open(database_path + "/" + choose)
 
-                    # im = im.rotate(180)
-                    im = im.transform((300, 300), Image.EXTENT, data=[10, 0, 10 + im.width // 4, im.height // 3])
+                    print("Choose a filter?\n1-Rotate \n2-Enchance \n3-CONTOUR \n4-SMOOTH ")
+                    filter_decision = str(input("So? ..."))
+                    if filter_decision.casefold() == "1":
+                        im = im.rotate(180)
+                    if filter_decision.casefold() == "2":
+                        im = im.point(lambda i: i * 1.2)
+                    if filter_decision.casefold() == "3":
+                        im = im.filter(ImageFilter.CONTOUR)
+                    if filter_decision.casefold() == "4":
+                        im = im.filter(ImageFilter.SMOOTH_MORE)
 
                     im = im.save(database_path + "/results/" + choose)
-
-                    # Implement what is happening when choose:
-                    # Depends on file type.
-
+                    del filter_decision
             else:
                 print(info)
                 is_done = False
