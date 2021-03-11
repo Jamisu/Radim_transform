@@ -260,19 +260,35 @@ if __name__ == "__main__":
                     print("chosen", choose)
                     im = Image.open(database_path + "/" + choose)
 
-                    print("Choose a filter?\n1-Rotate \n2-Enchance \n3-CONTOUR \n4-SMOOTH ")
-                    filter_decision = str(input("So? ..."))
-                    if filter_decision.casefold() == "1":
-                        im = im.rotate(180)
-                    if filter_decision.casefold() == "2":
-                        im = im.point(lambda i: i * 1.2)
-                    if filter_decision.casefold() == "3":
-                        im = im.filter(ImageFilter.CONTOUR)
-                    if filter_decision.casefold() == "4":
-                        im = im.filter(ImageFilter.SMOOTH_MORE)
+                    print("Image size: " + str(im.size[0]))
+
+                    columns = 10
+                    rows = 8
+
+                    tile_w = int(im.size[0] / columns)
+                    tile_h = int(im.size[1] / rows)
+
+                    def random_tile():
+                        start_x = random.randint(0, columns-1)
+                        start_y = random.randint(0, rows-1)
+                        paste_x = random.randint(0, columns-1)
+                        paste_y = random.randint(0, rows-1)
+                        region = im.crop((start_x * tile_w, start_y * tile_h, (start_x + 1) * tile_w, (start_y + 1) * tile_h))
+                        print("crop size: " + str(start_x * tile_w) + " " + str(start_y * tile_h) + " " + str((start_x + 1) * tile_w) + " " + str((start_y + 1) * tile_h))
+                        im.paste(region, (paste_x * tile_w, paste_y * tile_h, (paste_x + 1) * tile_w, (paste_y + 1) * tile_h))
+                        return im
+
+                    # left, upper, right, lower
+
+                    cycle_number = 50
+                    # cycle_number = random.randint(3, 30)
+
+                    for i in range(0, cycle_number):
+                        im = random_tile()
 
                     im = im.save(database_path + "/results/" + choose)
-                    del filter_decision
+
+                    is_done = True
             else:
                 print(info)
                 is_done = False
