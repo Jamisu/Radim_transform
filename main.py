@@ -258,35 +258,42 @@ if __name__ == "__main__":
                     f_number = int(input("Give the number of file: "))
                     choose = switch_case(f_number, db_list)
                     print("chosen", choose)
-                    im = Image.open(database_path + "/" + choose)
+                    im_orgin = Image.open(database_path + "/" + choose)
+                    im_copy = im_orgin.copy()
 
-                    print("Image size: " + str(im.size[0]))
+                    print("Image size: " + str(im_orgin.size[0]))
 
-                    columns = 10
-                    rows = 8
-
-                    tile_w = int(im.size[0] / columns)
-                    tile_h = int(im.size[1] / rows)
 
                     def random_tile():
+                        # columns = 10
+                        # rows = 8
+
+                        columns = random.randint(3, 20)
+                        rows = random.randint(3, 20)
+
+                        tile_w = int(im_orgin.size[0] / columns)
+                        tile_h = int(im_orgin.size[1] / rows)
+
                         start_x = random.randint(0, columns-1)
                         start_y = random.randint(0, rows-1)
                         paste_x = random.randint(0, columns-1)
                         paste_y = random.randint(0, rows-1)
-                        region = im.crop((start_x * tile_w, start_y * tile_h, (start_x + 1) * tile_w, (start_y + 1) * tile_h))
+                        region = im_orgin.crop((start_x * tile_w, start_y * tile_h, (start_x + 1) * tile_w, (start_y + 1) * tile_h))
+                        print("Columns: " + str(columns) + ", Rows: " + str(rows))
                         print("crop size: " + str(start_x * tile_w) + " " + str(start_y * tile_h) + " " + str((start_x + 1) * tile_w) + " " + str((start_y + 1) * tile_h))
-                        im.paste(region, (paste_x * tile_w, paste_y * tile_h, (paste_x + 1) * tile_w, (paste_y + 1) * tile_h))
-                        return im
+                        im_copy.paste(region, (paste_x * tile_w, paste_y * tile_h, (paste_x + 1) * tile_w, (paste_y + 1) * tile_h))
+                        return im_copy
 
                     # left, upper, right, lower
 
-                    cycle_number = 50
-                    # cycle_number = random.randint(3, 30)
+                    # cycle_number = 50
+                    cycle_number = random.randint(5, 50)
+                    print("REPEAT COPYING: " + str(cycle_number) + " times")
 
                     for i in range(0, cycle_number):
-                        im = random_tile()
+                        im_copy = random_tile()
 
-                    im = im.save(database_path + "/results/" + choose)
+                    im_copy = im_copy.save(database_path + "/results/" + choose)
 
                     is_done = True
             else:
